@@ -1,26 +1,30 @@
 module Main exposing (..)
 
 import Html exposing (Html, text, div, h1, img, input, ul, li, button)
-import Html.Attributes exposing (src, placeholder, type_, checked)
+import Html.Attributes exposing (src, placeholder, type_, checked, value)
 import Html.Events exposing (onClick, onInput)
 
+import Debug exposing (..)
 
 ---- MODEL ----
 type alias Todo = 
     {
-        title: String
+        id: Int
+    ,   title: String
     ,   completed: Bool
     }
 
 type alias Model =
     { 
-        todos: List Todo
+        field: String
+    ,   uid: Int
+    ,   todos: List Todo
     }
 
 
 init : ( Model, Cmd Msg )
 init =
-    ( { todos = [] } , Cmd.none )
+    ({ todos = [], field = "", uid = 0 }, Cmd.none )
 
 
 
@@ -28,19 +32,27 @@ init =
 
 
 type Msg =
-     Add
+       Add
+    |  Delete Int 
+    |  UpdateField String
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
+        UpdateField field ->
+                ({ model | field = field }, Cmd.none)
         Add ->
             let
-                todo = [{ title = "Buy Car", completed = False }]
+                todo = [{ id = model.uid, title = model.field, completed = False }]
             in
-                ({ model | todos = model.todos ++ todo }, Cmd.none)
+                ({ model | field = "", uid = model.uid +1, todos = model.todos ++ todo }, Cmd.none)
+        Delete id ->
+                ({ model | todos = filterId id model.todos }, Cmd.none)
 
-
+filterId: Int -> List Todo -> List Todo
+filterId id = 
+    List.filter (\a -> a.id /= id)
 
 ---- VIEW ----
 
@@ -48,9 +60,9 @@ update msg model =
 view : Model -> Html Msg
 view model =
     div []
-        [ img [ src "/logo.svg" ] []
-        , h1 [] [ text "Elm Todo" ]
-        , input [ type_ "text" ] []
+        [ 
+          h1 [] [ text "Elm Todo" ]
+        , input [ type_ "text", onInput UpdateField,  value model.field] []
         , button [ onClick Add ][ text "Add" ]
         , ul [] (renderList model.todos)
         ]
@@ -62,6 +74,7 @@ renderList =
         [ 
           input [ type_ "checkbox", checked a.completed ] []
         , text a.title 
+        , button [ onClick (Delete a.id) ] [ text "Delete" ]
         ]
     ))
 
