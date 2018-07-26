@@ -5,6 +5,10 @@ import Html.Attributes exposing (src, placeholder, type_, checked, value)
 import Html.Events exposing (onClick, onInput)
 import Debug exposing (..)
 
+import Bootstrap.CDN as CDN
+import Bootstrap.Grid as Grid
+import Bootstrap.Button as Button
+
 
 ---- MODEL ----
 
@@ -45,11 +49,14 @@ update msg model =
             ( { model | field = field }, Cmd.none )
 
         Add ->
-            let
-                todo =
-                    [ { id = model.uid, title = model.field, completed = False } ]
-            in
-                ( { model | field = "", uid = model.uid + 1, todos = model.todos ++ todo }, Cmd.none )
+            if model.field /= "" then
+                let
+                    todo =
+                        [ { id = model.uid, title = model.field, completed = False } ]
+                in
+                    ( { model | field = "", uid = model.uid + 1, todos = model.todos ++ todo }, Cmd.none )
+            else
+                ( model, Cmd.none )
 
         Delete id ->
             ( { model | todos = filterId id model.todos }, Cmd.none )
@@ -66,12 +73,16 @@ filterId id =
 
 view : Model -> Html Msg
 view model =
-    div []
-        [ h1 [] [ text "Elm Todo" ]
-        , input [ type_ "text", onInput UpdateField, value model.field ] []
-        , button [ onClick Add ] [ text "Add" ]
-        , ul [] (renderList model.todos)
+    Grid.container [] 
+        [ CDN.stylesheet -- creates an inline style node with the Bootstrap CSS
+        , div []
+            [ h1 [] [ text "Elm Todo" ]
+            , input [ type_ "text", onInput UpdateField, value model.field ] []
+            , Button.button [ Button.primary, Button.onClick Add ] [ text "Add" ]
+            , ul [] (renderList model.todos)
+            ]
         ]
+    
 
 
 renderList : List Todo -> List (Html Msg)
