@@ -1,13 +1,14 @@
 module Main exposing (..)
 
-import Html exposing (Html, text, div, h1, img, input, ul, li, button)
-import Html.Attributes exposing (src, placeholder, type_, checked, value)
+import Html exposing (Html, text, div, h1, img, input, ul, li, button, span, a)
+import Html.Attributes exposing (src, placeholder, type_, checked, value, class, attribute, href, readonly)
 import Html.Events exposing (onClick, onInput)
 import Debug exposing (..)
 
 import Bootstrap.CDN as CDN
 import Bootstrap.Grid as Grid
 import Bootstrap.Button as Button
+import Bootstrap.ListGroup as ListGroup
 
 
 ---- MODEL ----
@@ -77,26 +78,26 @@ view model =
         [ CDN.stylesheet -- creates an inline style node with the Bootstrap CSS
         , div []
             [ h1 [] [ text "Elm Todo" ]
-            , input [ type_ "text", onInput UpdateField, value model.field ] []
-            , Button.button [ Button.primary, Button.onClick Add ] [ text "Add" ]
-            , ul [] (renderList model.todos)
-            ]
-        ]
-    
-
-
-renderList : List Todo -> List (Html Msg)
-renderList =
-    (List.map
-        (\a ->
-            li []
-                [ input [ type_ "checkbox", checked a.completed ] []
-                , text a.title
-                , button [ onClick (Delete a.id) ] [ text "Delete" ]
+            , div [ class "input-group mb-3" ]
+              [
+                input [ type_ "text", class "form-control", onInput UpdateField, value model.field, placeholder "What's your task today?" ] []
+              , div [ class "input-group-append" ] 
+                [
+                  Button.button [ Button.primary, Button.onClick Add ] [ text "Add" ]
                 ]
-        )
-    )
+              ]
+           ]
+           , ListGroup.ul (renderList model.todos)
+        ]
 
+renderList : List Todo -> List (ListGroup.Item Msg)
+renderList =
+    List.map (\v -> ListGroup.li [] [ text v.title ])
+
+    -- [ input [ type_ "checkbox", checked a.completed ] []
+    -- , text a.title
+    -- , Button.button [ Button.danger, Button.onClick (Delete a.id) ] [ text "Delete" ]
+    -- ]
 
 
 ---- PROGRAM ----
