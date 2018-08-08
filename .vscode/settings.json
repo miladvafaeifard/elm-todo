@@ -1,0 +1,26 @@
+{
+    "typescript.check.workspaceVersion": false,
+    "workbench.colorTheme": "Darcula Extended",
+    "workbench.iconTheme": "eq-material-theme-icons",
+    "terminal.integrated.shell.windows": "C:\\Program Files\\Git\\bin\\bash.exe",
+    "java.errors.incompleteClasspath.severity": "ignore",
+    "explorer.confirmDelete": false,
+    "jshint.enable": false,
+    "explorer.confirmDragAndDrop": false,
+    "team.showWelcomeMessage": false,
+    "files.exclude": {
+        "node_modules/": true
+    },
+    "elm.formatCommand": ".\\node_modules\\.bin\\elm-format",
+    "gitlens.advanced.messages": {
+        "suppressShowKeyBindingsNotice": true
+    },
+    "gitlens.historyExplorer.enabled": true,
+    "gitlens.codeLens.enabled": false,
+    "materialTheme.autoApplyIcons": true,
+    "materialTheme.fixIconsRunning": false,
+    "jetbrainsKeymap.promptV3Features": true,
+    "editor.multiCursorModifier": "ctrlCmd",
+    "editor.formatOnPaste": true,
+    "files.autoSave": "off"
+}
