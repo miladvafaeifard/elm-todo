@@ -13,3 +13,8 @@ img {
   margin: 20px 0;
   max-width: 200px;
 }
+
+
+.list-group-item .close {
+  margin-top: -.2rem;
+}

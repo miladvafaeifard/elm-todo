@@ -3,12 +3,12 @@ module Main exposing (..)
 import Html exposing (Html, text, div, h1, img, input, ul, li, button, span, a)
 import Html.Attributes exposing (src, placeholder, type_, checked, value, class, attribute, href, readonly)
 import Html.Events exposing (onClick, onInput)
-import Debug exposing (..)
 
 import Bootstrap.CDN as CDN
 import Bootstrap.Grid as Grid
 import Bootstrap.Button as Button
 import Bootstrap.ListGroup as ListGroup
+import Bootstrap.Form.Checkbox as Checkbox
 
 
 ---- MODEL ----
@@ -41,6 +41,7 @@ type Msg
     = Add
     | Delete Int
     | UpdateField String
+    | CheckCompletion Bool
 
 
 update : Msg -> Model -> ( Model, Cmd Msg )
@@ -61,7 +62,10 @@ update msg model =
 
         Delete id ->
             ( { model | todos = filterId id model.todos }, Cmd.none )
-
+        
+        CheckCompletion isChecked ->
+        -- TODO: HOW TO PUT checked on record data according to id defined.
+            ( model , Cmd.none )
 
 filterId : Int -> List Todo -> List Todo
 filterId id =
@@ -92,12 +96,20 @@ view model =
 
 renderList : List Todo -> List (ListGroup.Item Msg)
 renderList =
-    List.map (\v -> ListGroup.li [] [ text v.title ])
-
-    -- [ input [ type_ "checkbox", checked a.completed ] []
-    -- , text a.title
-    -- , Button.button [ Button.danger, Button.onClick (Delete a.id) ] [ text "Delete" ]
-    -- ]
+    List.map (\v ->
+        ListGroup.li []
+            [
+                Checkbox.checkbox
+                    [ Checkbox.id <| "todo-" ++ toString v.id
+                    , Checkbox.inline
+                    , Checkbox.checked v.completed 
+                    , Checkbox.onCheck CheckCompletion] v.title
+            ,   Button.button
+                    [ Button.attrs [ class "close" ] 
+                    , Button.onClick (Delete v.id) ] 
+                        [ span [ ] [ text "x" ] ]
+            ]
+    )
 
 
 ---- PROGRAM ----
